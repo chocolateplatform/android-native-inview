@@ -29,10 +29,10 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
 
    public static final String TAG = "KevinActivity";
 
-   ActivityMainBinding binding;
-   Adapter adapter = new Adapter();
-   LinearLayoutManager lm;
-   LVDOBannerAd adview;
+   private ActivityMainBinding binding;
+   private Adapter adapter = new Adapter();
+   private LinearLayoutManager lm;
+   private LVDOBannerAd adview;
    private boolean isAdRequestInProgress;
 
    @Override
@@ -82,10 +82,10 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
 
    private void requestAd() {
       if (isAdRequestInProgress) {
-         Log.d(TAG, "requestAd (ad request already in progress)");
+         Log.d(TAG, "requestAd (don't do; already in progress)");
          return;
       } else {
-         Log.d(TAG, "requestAd (fetch new ad)");
+         Log.d(TAG, "requestAd");
          isAdRequestInProgress = true;
       }
       adview = new LVDOBannerAd(this, LVDOAdSize.INVIEW_LEADERBOARD, Config.APP_ID, this);

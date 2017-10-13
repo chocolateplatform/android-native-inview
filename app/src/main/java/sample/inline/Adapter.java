@@ -28,10 +28,6 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
       notifyItemRangeInserted(0, itemWrappers.size());
    }
 
-   public ArrayList<ItemWrapper> getItemWrappers() {
-      return this.itemWrappers;
-   }
-
    public void insertAd(int position, View adView, LVDOBannerAd bannerAd) {
       removeAd();
       ItemWrapper itemWrapper = new ItemWrapper(adView, bannerAd);
@@ -45,7 +41,6 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          ItemWrapper removed = itemWrappers.remove(adPos);
          notifyItemRemoved(adPos);
          removed.bannerAd.destroyView();
-         ((ViewGroup) removed.adView.getParent()).removeAllViews();
          Log.d(TAG, "ad removed");
       }
    }
@@ -62,10 +57,10 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
    @Override
    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-
+      Log.d(TAG, "onViewRecycled holder: " + holder);
       if (holder instanceof AdHolder) {
          //AdHolder adHolder = (AdHolder) holder;
-         Log.d(TAG, "onViewRecycled() adHolder");
+         //todo investigate some cleanup
       }
    }
 
@@ -92,14 +87,9 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
       if (itemWrapper.type == TYPE_NORMAL) {
          ((ItemHolder) holder).binding.setItem(itemWrapper.item);
       } else {
-         AdHolder adHolder = (AdHolder) holder;
-         if (adHolder.binding.adContainer.getChildCount() == 0) {
-            ((ViewGroup) itemWrapper.adView.getParent()).removeView(itemWrapper.adView);
-            adHolder.binding.adContainer.addView(itemWrapper.adView);
-            Log.d(TAG, "ad bind to view (adView added to container)");
-         } else {
-            Log.d(TAG, "ad bind to view (NO view added to container)");
-         }
+         ((AdHolder) holder).binding.adContainer.removeAllViews();
+         ((ViewGroup) itemWrapper.adView.getParent()).removeView(itemWrapper.adView);
+         ((AdHolder) holder).binding.adContainer.addView(itemWrapper.adView);
       }
    }
 
