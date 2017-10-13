@@ -88,7 +88,10 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          ((ItemHolder) holder).binding.setItem(itemWrapper.item);
       } else {
          ((AdHolder) holder).binding.adContainer.removeAllViews();
-         ((ViewGroup) itemWrapper.adView.getParent()).removeView(itemWrapper.adView);
+         ViewGroup parent = (ViewGroup) itemWrapper.adView.getParent();
+         if (parent != null) {
+            parent.removeView(itemWrapper.adView);
+         }
          ((AdHolder) holder).binding.adContainer.addView(itemWrapper.adView);
       }
    }
