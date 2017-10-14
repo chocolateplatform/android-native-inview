@@ -15,12 +15,12 @@ public final class Config {
 
 
    /**
-    * Distance between ads position and the last completely visible item position
+    * Distance between the ad position and the last visible item position on screen
     * in the recyclerView before triggering a new ad request.  Because it takes
     * time (sometimes up to 3 seconds) for an ad to get fetched, it's rare that
     * the next ad postion will be exactly TRIGGER_DISTANCE apart from the previous
-    * ad position, unless the user was to completely stop scrolling for like 5 seconds
-    * after scrolling each tile.
+    * ad position, unless the user was to completely pause scrolling for 5 seconds
+    * after each tile scroll.
     */
    public static final int TRIGGER_DISTANCE = 2;
 }
