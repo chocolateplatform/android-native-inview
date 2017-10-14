@@ -93,7 +93,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
       if (itemWrapper.type == TYPE_NORMAL) {
          ItemHolder itemHolder = (ItemHolder) holder;
          itemHolder.binding.setItem(itemWrapper.item);
-         //itemHolder.binding.image.getLayoutParams().height = (int) (SCREEN_HEIGHT * 0.60f);
+         itemHolder.binding.image.getLayoutParams().height = (int) (SCREEN_HEIGHT * 0.60f);
 
       } else {
          AdHolder adHolder = (AdHolder) holder;

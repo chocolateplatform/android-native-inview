@@ -101,14 +101,13 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
       if (banner != null) {
          int vis = lm.findLastVisibleItemPosition();
          int adPos = adapter.getAdPosition();
-         if (adPos != -1) {
+         if (adPos != -1 && vis != -1) {
             if (Math.abs(vis - adPos) < Config.TRIGGER_DISTANCE) {
                return;//there's already an ad nearby in the list
             }
          }
-         if (vis > -1) {
-            adapter.insertAd(vis + 1, banner, adview);
-         }
+         vis = vis < 2 ? 2 : vis;
+         adapter.insertAd(vis, banner, adview);
       }
    }
 
