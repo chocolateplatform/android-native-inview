@@ -57,10 +57,9 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
    @Override
    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-      Log.d(TAG, "onViewRecycled holder: " + holder);
       if (holder instanceof AdHolder) {
          //AdHolder adHolder = (AdHolder) holder;
-         //todo investigate some cleanup
+         Log.d(TAG, "onViewRecycled holder: " + holder);
       }
    }
 

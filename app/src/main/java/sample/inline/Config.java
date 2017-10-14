@@ -9,8 +9,10 @@ public final class Config {
    }
 
    //your vdopia app id; replace with your own
-   public static final String APP_ID = "Ea7TkX";
+   //public static final String APP_ID = "Ea7TkX";
    //public static final String APP_ID = "llpHX8";
+   public static final String APP_ID = "XqjhRR";
+
 
    /**
     * Distance between ads position and the last completely visible item position
