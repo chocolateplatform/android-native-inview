@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
    public static final String TAG = "KevinActivity";
 
    private ActivityMainBinding binding;
-   private Adapter adapter = new Adapter();
+   private Adapter adapter;
    private LinearLayoutManager lm;
    private LVDOBannerAd adview;
    private boolean isAdRequestInProgress;
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      adapter = new Adapter(this);
       binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
       binding.recyclerView.setLayoutManager((lm = new LinearLayoutManager(this)));
       binding.recyclerView.setAdapter(adapter);
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                Log.d(TAG, "SCROLL_STATE_IDLE");
                int adPos = adapter.getAdPosition();
-               int vis = lm.findLastCompletelyVisibleItemPosition();
+               int vis = lm.findLastVisibleItemPosition();
                if (Math.abs(vis - adPos) >= Config.TRIGGER_DISTANCE) {
                   requestAd();
                   Log.d(TAG, "REQUEST NEW AD");
@@ -98,14 +99,16 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
       Log.d(TAG, "onBannerAdLoaded");
       isAdRequestInProgress = false;
       if (banner != null) {
-         int vis = lm.findLastCompletelyVisibleItemPosition();
+         int vis = lm.findLastVisibleItemPosition();
          int adPos = adapter.getAdPosition();
          if (adPos != -1) {
             if (Math.abs(vis - adPos) < Config.TRIGGER_DISTANCE) {
                return;//there's already an ad nearby in the list
             }
          }
-         adapter.insertAd(vis, banner, adview);
+         if (vis > -1) {
+            adapter.insertAd(vis + 1, banner, adview);
+         }
       }
    }
 

@@ -1,5 +1,6 @@
 package sample.inline;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,12 +15,18 @@ import java.util.ArrayList;
 import sample.inline.databinding.AdItemBinding;
 import sample.inline.databinding.ItemBinding;
 import sample.inline.model.Item;
+import sample.inline.utils.ScreenUtil;
 
 public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
    private static final String TAG = "KevinAdapter";
    private static final int TYPE_NORMAL = 0;
    private static final int TYPE_ADS = 1;
+   private static int SCREEN_HEIGHT;
+
+   public Adapter(Context context) {
+      SCREEN_HEIGHT = ScreenUtil.getScreenHeight(context);
+   }
 
    private ArrayList<ItemWrapper> itemWrappers = new ArrayList<>();
 
@@ -84,14 +91,18 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
       ItemWrapper itemWrapper = itemWrappers.get(position);
       if (itemWrapper.type == TYPE_NORMAL) {
-         ((ItemHolder) holder).binding.setItem(itemWrapper.item);
+         ItemHolder itemHolder = (ItemHolder) holder;
+         itemHolder.binding.setItem(itemWrapper.item);
+         //itemHolder.binding.image.getLayoutParams().height = (int) (SCREEN_HEIGHT * 0.60f);
+
       } else {
-         ((AdHolder) holder).binding.adContainer.removeAllViews();
+         AdHolder adHolder = (AdHolder) holder;
+         adHolder.binding.adContainer.removeAllViews();
          ViewGroup parent = (ViewGroup) itemWrapper.adView.getParent();
          if (parent != null) {
             parent.removeView(itemWrapper.adView);
          }
-         ((AdHolder) holder).binding.adContainer.addView(itemWrapper.adView);
+         adHolder.binding.adContainer.addView(itemWrapper.adView);
       }
    }
 
