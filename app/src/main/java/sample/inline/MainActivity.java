@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
    private LinearLayoutManager lm;
    private LVDOBannerAd adview;
    private boolean isAdRequestInProgress;
+   private int scrollDy;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,13 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
                   Log.d(TAG, "SCROLL_STATE_IDLE BUT DON'T REQUEST NEW AD");
                }
             }
+
+         }
+
+         @Override
+         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            Log.d(TAG, "scrolled dy: " + dy);
+            scrollDy = dy;
          }
       });
    }
@@ -99,7 +107,8 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
       Log.d(TAG, "onBannerAdLoaded");
       isAdRequestInProgress = false;
       if (banner != null) {
-         int vis = lm.findLastVisibleItemPosition();
+         int vis = scrollDy >= 0 ? lm.findLastVisibleItemPosition() : lm.findFirstVisibleItemPosition();
+
          int adPos = adapter.getAdPosition();
          if (adPos != -1 && vis != -1) {
             if (Math.abs(vis - adPos) < Config.TRIGGER_DISTANCE) {
