@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                Log.d(TAG, "SCROLL_STATE_IDLE");
                int adPos = adapter.getAdPosition();
-               int vis = lm.findLastVisibleItemPosition();
+               int vis = scrollDy >= 0 ? lm.findLastVisibleItemPosition() : lm.findFirstVisibleItemPosition();
                if (Math.abs(vis - adPos) >= Config.TRIGGER_DISTANCE) {
                   requestAd();
                   Log.d(TAG, "REQUEST NEW AD");
@@ -84,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
          @Override
          public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             Log.d(TAG, "scrolled dy: " + dy);
+            /**
+             * A negative dy value means the user is scrolling in the upwards direction
+             * and a positive dy value means the user is scrolling downwards.
+             */
             scrollDy = dy;
          }
       });
@@ -110,12 +114,12 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
          int vis = scrollDy >= 0 ? lm.findLastVisibleItemPosition() : lm.findFirstVisibleItemPosition();
 
          int adPos = adapter.getAdPosition();
-         if (adPos != -1 && vis != -1) {
+         if (adPos != -1) {
             if (Math.abs(vis - adPos) < Config.TRIGGER_DISTANCE) {
                return;//there's already an ad nearby in the list
             }
          }
-         vis = vis < 2 ? 2 : vis;
+         vis = vis < Config.TRIGGER_DISTANCE ? Config.TRIGGER_DISTANCE : vis;
          adapter.insertAd(vis, banner, adview);
       }
    }
