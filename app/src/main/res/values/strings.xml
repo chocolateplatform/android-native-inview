@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">inline</string>
+    <string name="app_name">Vdopia Sample</string>
+    <string name="preroll">Preroll</string>
+    <string name="hello">Hello Everybody!</string>
 </resources>
