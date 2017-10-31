@@ -7,10 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -28,40 +26,23 @@ import sample.inline.Config;
 import sample.inline.R;
 import sample.inline.databinding.LayoutPrerollBinding;
 
-public class PrerollFragment extends Fragment implements PrerollAdListener {
+public class PrerollActivity extends AppCompatActivity implements PrerollAdListener {
 
-    public static final String TAG = "PrerollFragment";
-
-    public static Fragment newInstance() {
-        Bundle args = new Bundle();
-        PrerollFragment fragment = new PrerollFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public static final String TAG = "PrerollActivity";
 
     private LayoutPrerollBinding binding;
-    private int prerollAdCount;
+    private int prerollAdLoadedCount;
     private boolean isMainContentFullscreen = true;
     private Handler handler = new Handler(Looper.getMainLooper());
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.layout_preroll, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.preroll_fragment);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                showPrerollAd();
-            }
-        });
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.layout_preroll);
+        requestPreroll();
+        getSupportActionBar().setTitle(R.string.preroll_activity);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        requestPreroll();
     }
 
     private PreRollVideoAd preRollVideoAd;
@@ -69,18 +50,24 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
     private void requestPreroll() {
         LVDOAdSize adSize = new LVDOAdSize(300, 250);
 
-        preRollVideoAd = PreRollVideoAd.getInstance(getActivity());
-        preRollVideoAd.setMediaController(new MediaController(getActivity()));
+        preRollVideoAd = PreRollVideoAd.getInstance(this);
+        preRollVideoAd.setMediaController(new MediaController(this));
 
         preRollVideoAd.setPrerollAdListener(new PrerollAdListener() {
             @Override
             public void onPrerollAdLoaded(View prerollAd) {
                 Log.v(TAG, "onPrerollAdLoaded..." + prerollAd);
                 synchronized (this) {
-                    prerollAdCount++;
+                    prerollAdLoadedCount++;
                 }
-                if (prerollAdCount == 3)
-                    showPrerollAd();
+                if (prerollAdLoadedCount == 3) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showPrerollAd();
+                        }
+                    }, 0);
+                }
             }
 
             @Override
@@ -119,11 +106,11 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
             }
         });
 
-        preRollVideoAd.loadAd(getAdRequest(), Config.APP_ID, adSize, getActivity(), isMainContentFullscreen);
+        preRollVideoAd.loadAd(getAdRequest(), Config.APP_ID, adSize, this, isMainContentFullscreen);
     }
 
     private LVDOAdRequest getAdRequest() {
-        LVDOAdRequest adRequest = new LVDOAdRequest(getActivity());
+        LVDOAdRequest adRequest = new LVDOAdRequest(this);
 
         //        ArrayList<LVDOConstants.PARTNERS> mPartnerNames = new ArrayList<>();
         //        LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.INMOBI;
@@ -161,8 +148,8 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
         mPartnerNames.add(partner);
         adRequest.setPartnerNames(mPartnerNames);
 
-        preRollVideoAd = PreRollVideoAd.getInstance(getActivity());
-        preRollVideoAd.setAdContext(getActivity());
+        preRollVideoAd = PreRollVideoAd.getInstance(this);
+        preRollVideoAd.setAdContext(this);
 
         String contentVideo = "http://cdn.vdopia.com/files/happy.mp4";
         preRollVideoAd.setVideoPath(contentVideo);
@@ -221,13 +208,13 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
     }
 
     private void setContentVisibility() {
-        getActivity().finish();
+        finish();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
         preRollVideoAd.destroyView();
+        super.onDestroy();
     }
 
     @Override
@@ -240,14 +227,14 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
             layoutParams.height = LinearLayout.LayoutParams.MATCH_PARENT;
             binding.adLayout.setLayoutParams(layoutParams);
 
-            ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+            ((AppCompatActivity) this).getSupportActionBar().hide();
         } else {
             ViewGroup.LayoutParams layoutParams = binding.adLayout.getLayoutParams();
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.height = getResources().getDimensionPixelSize(R.dimen.preroll_video_height);
             binding.adLayout.setLayoutParams(layoutParams);
 
-            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+            ((AppCompatActivity) this).getSupportActionBar().show();
         }
     }
 
