@@ -4,8 +4,6 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,15 +29,12 @@ public class PrerollActivity extends AppCompatActivity implements PrerollAdListe
     public static final String TAG = "PrerollActivity";
 
     private LayoutPrerollBinding binding;
-    private int prerollAdLoadedCount;
     private boolean isMainContentFullscreen = true;
-    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.layout_preroll);
-        requestPreroll();
         getSupportActionBar().setTitle(R.string.preroll_activity);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         requestPreroll();
@@ -57,17 +52,7 @@ public class PrerollActivity extends AppCompatActivity implements PrerollAdListe
             @Override
             public void onPrerollAdLoaded(View prerollAd) {
                 Log.v(TAG, "onPrerollAdLoaded..." + prerollAd);
-                synchronized (this) {
-                    prerollAdLoadedCount++;
-                }
-                if (prerollAdLoadedCount == 3) {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showPrerollAd();
-                        }
-                    }, 0);
-                }
+                showPrerollAd();
             }
 
             @Override
@@ -167,7 +152,7 @@ public class PrerollActivity extends AppCompatActivity implements PrerollAdListe
 
     @Override
     public void onPrerollAdLoaded(View prerollAd) {
-        Log.d(TAG, "PreRoll Video Ad onPrerollAdLoaded");
+        Log.d(TAG, "PreRoll Video Ad onPrerollAdLoaded (PLEASE IGNORE ME)");
     }
 
     @Override

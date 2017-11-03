@@ -5,4 +5,5 @@
     <dimen name="ad_height">250dp</dimen>
     <dimen name="tile_height">485dp</dimen>
     <dimen name="preroll_video_height">220dp</dimen>
+    <bool name="enable_vdopia_logs">true</bool>
 </resources>
