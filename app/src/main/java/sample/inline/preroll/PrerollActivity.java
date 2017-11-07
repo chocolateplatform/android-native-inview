@@ -58,7 +58,8 @@ public class PrerollActivity extends AppCompatActivity {
 
             @Override
             public void onPrerollAdFailed(View prerollAd, LVDOConstants.LVDOErrorCode errorCode) {
-                Log.v(TAG, "onPrerollAdFailed..." + errorCode.toString());
+                Log.v(TAG, "onPrerollAdFailed..." + errorCode.toString() + " Just play video " + "content");
+                showPrerollAd();
             }
 
             @Override
@@ -135,11 +136,6 @@ public class PrerollActivity extends AppCompatActivity {
     private void showPrerollAd() {
         LVDOAdRequest adRequest = getAdRequest();
 
-        ArrayList<LVDOConstants.PARTNERS> partnerNames = new ArrayList<>();
-        LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.ALL;
-        partnerNames.add(partner);
-        //adRequest.setPartnerNames(partnerNames);
-
         preRollVideoAd = PreRollVideoAd.getInstance(this);
         preRollVideoAd.setAdContext(this);
 
@@ -149,8 +145,7 @@ public class PrerollActivity extends AppCompatActivity {
         preRollVideoAd.setPrerollAdListener(new PrerollAdListener() {
             @Override
             public void onPrerollAdLoaded(View prerollAd) {
-                Log.d(TAG, "PreRoll Video Ad onPrerollAdLoaded (DON'T CARE; ALREADY HAVE THE AD " +
-                      "TO SHOW)");
+                Log.d(TAG, "PreRoll Video Ad onPrerollAdLoaded (DON'T CARE; ALREADY HAVE THE AD " + "TO SHOW)");
             }
 
             @Override
