@@ -44,12 +44,19 @@ public class PrerollActivity extends AppCompatActivity {
         @Override
         public void onPrerollAdLoaded(View prerollAd) {
             Log.v(TAG, "onPrerollAdLoaded..." + prerollAd);
+            /**
+             * Preroll is now ready to be played.
+             */
             showPrerollAd();
         }
 
         @Override
         public void onPrerollAdFailed(View prerollAd, LVDOConstants.LVDOErrorCode errorCode) {
             Log.v(TAG, "onPrerollAdFailed..." + errorCode.toString() + " Just play video " + "content");
+            /**
+             * If a preroll ad was requested, but failed (due to no inventory), then showPrerollAd()
+             * will result in the main content to be played.
+             */
             showPrerollAd();
         }
 
