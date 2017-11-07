@@ -43,7 +43,7 @@ public class PrerollActivity extends AppCompatActivity {
     private PrerollAdListener singlePrerollAdListener = new PrerollAdListener() {
         @Override
         public void onPrerollAdLoaded(View prerollAd) {
-            Log.v(TAG, "onPrerollAdLoaded..." + prerollAd);
+            Log.v(TAG, "onPrerollAdLoaded..." + prerollAd + " prerollAd.isReady(): " + "" + preRollVideoAd.isReady() + " preroll cache count: " + preRollVideoAd.getNumReadyAdsFromCache());
             /**
              * Preroll is now ready to be played.
              */
