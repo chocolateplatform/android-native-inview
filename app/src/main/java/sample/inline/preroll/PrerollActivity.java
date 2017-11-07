@@ -24,7 +24,7 @@ import sample.inline.Config;
 import sample.inline.R;
 import sample.inline.databinding.LayoutPrerollBinding;
 
-public class PrerollActivity extends AppCompatActivity implements PrerollAdListener {
+public class PrerollActivity extends AppCompatActivity {
 
     public static final String TAG = "PrerollActivity";
 
@@ -46,6 +46,7 @@ public class PrerollActivity extends AppCompatActivity implements PrerollAdListe
         LVDOAdSize adSize = new LVDOAdSize(300, 250);
 
         preRollVideoAd = PreRollVideoAd.getInstance(this);
+        preRollVideoAd.setAdRequest(getAdRequest());
         preRollVideoAd.setMediaController(new MediaController(this));
 
         preRollVideoAd.setPrerollAdListener(new PrerollAdListener() {
@@ -91,16 +92,22 @@ public class PrerollActivity extends AppCompatActivity implements PrerollAdListe
             }
         });
 
-        preRollVideoAd.loadAd(getAdRequest(), Config.APP_ID, adSize, this, isMainContentFullscreen);
+        if (preRollVideoAd.isReady()) {
+            Log.d(TAG, "requestPreroll() play ad from cache");
+            showPrerollAd();
+        } else {
+            Log.d(TAG, "requestPreroll() request new ads");
+            preRollVideoAd.loadAd(getAdRequest(), Config.APP_ID, adSize, this, isMainContentFullscreen);
+        }
     }
 
     private LVDOAdRequest getAdRequest() {
         LVDOAdRequest adRequest = new LVDOAdRequest(this);
 
-        //        ArrayList<LVDOConstants.PARTNERS> mPartnerNames = new ArrayList<>();
-        //        LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.INMOBI;
-        //        mPartnerNames.add(partner);
-        //        adRequest.setPartnerNames(mPartnerNames);
+        ArrayList<LVDOConstants.PARTNERS> partnerNames = new ArrayList<>();
+        LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.ALL;
+        partnerNames.add(partner);
+        adRequest.setPartnerNames(partnerNames);
 
         //        LocationData locationData = new LocationData(AdListActivity.this);
         //        adRequest.setLocation(locationData.getDeviceLocation());
@@ -128,10 +135,10 @@ public class PrerollActivity extends AppCompatActivity implements PrerollAdListe
     private void showPrerollAd() {
         LVDOAdRequest adRequest = getAdRequest();
 
-        ArrayList<LVDOConstants.PARTNERS> mPartnerNames = new ArrayList<>();
+        ArrayList<LVDOConstants.PARTNERS> partnerNames = new ArrayList<>();
         LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.ALL;
-        mPartnerNames.add(partner);
-        adRequest.setPartnerNames(mPartnerNames);
+        partnerNames.add(partner);
+        //adRequest.setPartnerNames(partnerNames);
 
         preRollVideoAd = PreRollVideoAd.getInstance(this);
         preRollVideoAd.setAdContext(this);
@@ -139,7 +146,50 @@ public class PrerollActivity extends AppCompatActivity implements PrerollAdListe
         String contentVideo = "http://cdn.vdopia.com/files/happy.mp4";
         preRollVideoAd.setVideoPath(contentVideo);
         preRollVideoAd.setAdRequest(adRequest);
-        preRollVideoAd.setPrerollAdListener(this);
+        preRollVideoAd.setPrerollAdListener(new PrerollAdListener() {
+            @Override
+            public void onPrerollAdLoaded(View prerollAd) {
+                Log.d(TAG, "PreRoll Video Ad onPrerollAdLoaded (DON'T CARE; ALREADY HAVE THE AD " +
+                      "TO SHOW)");
+            }
+
+            @Override
+            public void onPrerollAdFailed(View prerollAd, LVDOConstants.LVDOErrorCode errorCode) {
+                Log.d(TAG, "PreRoll Video Ad onPrerollAdFailed: " + errorCode);
+            }
+
+            @Override
+            public void onPrerollAdShown(View prerollAd) {
+                Log.d(TAG, "PreRoll Video Ad onPrerollAdShown");
+            }
+
+            @Override
+            public void onPrerollAdClicked(View prerollAd) {
+                Log.d(TAG, "PreRoll Video Ad onPrerollAdClicked");
+            }
+
+            @Override
+            public void onPrerollAdCompleted(View prerollAd) {
+                Log.d(TAG, "PreRoll Video Ad onPrerollAdCompleted");
+            }
+
+            @Override
+            public void onPrepareMainContent(MediaPlayer player) {
+                Log.d(TAG, "PreRoll Video onPrepareMainContent");
+            }
+
+            @Override
+            public void onErrorMainContent(MediaPlayer player, int code) {
+                Log.d(TAG, "PreRoll Video onErrorMainContent : " + code);
+                setContentVisibility();
+            }
+
+            @Override
+            public void onCompleteMainContent(MediaPlayer player) {
+                Log.d(TAG, "PreRoll Video onCompleteMainContent");
+                setContentVisibility();
+            }
+        });
 
         ViewGroup parent = (ViewGroup) preRollVideoAd.getParent();
         if (parent != null) {
@@ -150,56 +200,8 @@ public class PrerollActivity extends AppCompatActivity implements PrerollAdListe
         preRollVideoAd.showAd();
     }
 
-    @Override
-    public void onPrerollAdLoaded(View prerollAd) {
-        Log.d(TAG, "PreRoll Video Ad onPrerollAdLoaded (PLEASE IGNORE ME)");
-    }
-
-    @Override
-    public void onPrerollAdFailed(View prerollAd, LVDOConstants.LVDOErrorCode errorCode) {
-        Log.d(TAG, "PreRoll Video Ad onPrerollAdFailed: " + errorCode);
-    }
-
-    @Override
-    public void onPrerollAdShown(View prerollAd) {
-        Log.d(TAG, "PreRoll Video Ad onPrerollAdShown");
-    }
-
-    @Override
-    public void onPrerollAdClicked(View prerollAd) {
-        Log.d(TAG, "PreRoll Video Ad onPrerollAdClicked");
-    }
-
-    @Override
-    public void onPrerollAdCompleted(View prerollAd) {
-        Log.d(TAG, "PreRoll Video Ad onPrerollAdCompleted");
-    }
-
-    @Override
-    public void onPrepareMainContent(MediaPlayer player) {
-        Log.d(TAG, "PreRoll Video onPrepareMainContent");
-    }
-
-    @Override
-    public void onErrorMainContent(MediaPlayer player, int code) {
-        Log.d(TAG, "PreRoll Video onErrorMainContent : " + code);
-        setContentVisibility();
-    }
-
-    @Override
-    public void onCompleteMainContent(MediaPlayer player) {
-        Log.d(TAG, "PreRoll Video onCompleteMainContent");
-        setContentVisibility();
-    }
-
     private void setContentVisibility() {
         finish();
-    }
-
-    @Override
-    public void onDestroy() {
-        preRollVideoAd.destroyView();
-        super.onDestroy();
     }
 
     @Override

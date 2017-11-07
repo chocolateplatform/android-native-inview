@@ -227,7 +227,6 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        preRollVideoAd.destroyView();
     }
 
     @Override

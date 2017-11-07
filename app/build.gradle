@@ -56,18 +56,15 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    //compile 'com.devbrackets.android:exomedia:4.0.3'
-    //compile 'com.google.android.exoplayer:exoplayer:r2.5.4'
-    compile('com.vdopia.ads.lw:coresdk:2.5.1.5') {
+    compile('com.vdopia.ads.lw:coresdk:2.5.1.1') {
         //exclude group: 'com.facebook.android', module: 'audience-network-sdk'
         //exclude group: 'com.google.android.exoplayer', module: 'exoplayer'
         //exclude group: 'com.devbrackets.android', module: 'exomedia'
         //exclude group: 'com.google.android.gms', module: 'play-services-ads'
-        //exclude group: 'com.google.android.gms', module: 'play-services-ads'
     }
 
-    compile('com.vdopia.ads.lw:google-adapter:2.5.1.5') {
-        //exclude group: 'com.vdopia.ads.lw'
+    compile('com.vdopia.ads.lw:google-adapter:2.5.1.1') {
+        //exclude group: 'com.vdopia.ads.lw', module: 'coresdk'
         //exclude group: 'com.google.android.gms', module: 'play-services-ads'
         //exclude group: 'com.google.ads.interactivemedia.v3', module: 'interactivemedia'
         //exclude group: 'com.google.android.gms', module: 'play-services-ads'
@@ -87,12 +84,5 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-
-    //compile 'com.google.ads.interactivemedia.v3:interactivemedia:3.6.0'
-    //compile 'com.google.android.gms:play-services-ads:11.4.2'
-    //compile 'com.adcolony:sdk:3.1.2'
-    //compile 'com.flurry.android:ads:7.0.0'
-    //compile 'com.inmobi.monetization:inmobi-ads:6.1.0'
-    //compile('com.mopub:mopub-sdk:4.6.1@aar') { transitive = true }
 
 }

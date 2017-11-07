@@ -11,9 +11,9 @@ public final class Config {
     //your vdopia app id; replace with your own
     //public static final String APP_ID = "Ea7TkX";
     //public static final String APP_ID = "llpHX8";
-    //public static final String APP_ID = "XqjhRR";
+    public static final String APP_ID = "XqjhRR";
     //public static final String APP_ID = "r7BmFo";
-    public static final String APP_ID = "8fd33f36a843e42d7b5b725cb9989f17";
+    //public static final String APP_ID = "8fd33f36a843e42d7b5b725cb9989f17";
 
     /**
      * Distance between the ad position and the last visible item position on screen

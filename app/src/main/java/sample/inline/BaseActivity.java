@@ -18,6 +18,8 @@ import com.vdopia.ads.lw.LVDOConstants;
 import com.vdopia.ads.lw.PreRollVideoAd;
 import com.vdopia.ads.lw.PrerollAdListener;
 
+import java.util.ArrayList;
+
 import sample.inline.preroll.PrerollActivity;
 import sample.inline.preroll.PrerollFragment;
 
@@ -28,7 +30,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestPreroll();
+        requestPreroll();
     }
 
     @Override
@@ -136,10 +138,10 @@ public class BaseActivity extends AppCompatActivity {
     private LVDOAdRequest getAdRequest() {
         LVDOAdRequest adRequest = new LVDOAdRequest(this);
 
-        //        ArrayList<LVDOConstants.PARTNERS> mPartnerNames = new ArrayList<>();
-        //        LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.INMOBI;
-        //        mPartnerNames.add(partner);
-        //        adRequest.setPartnerNames(mPartnerNames);
+        ArrayList<LVDOConstants.PARTNERS> partnerNames = new ArrayList<>();
+        LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.ALL;
+        partnerNames.add(partner);
+        adRequest.setPartnerNames(partnerNames);
 
         //        LocationData locationData = new LocationData(AdListActivity.this);
         //        adRequest.setLocation(locationData.getDeviceLocation());
@@ -162,5 +164,13 @@ public class BaseActivity extends AppCompatActivity {
         adRequest.setPublisherDomain("vdopia.com");
 
         return adRequest;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (preRollVideoAd != null) {
+            preRollVideoAd.destroyView();
+        }
     }
 }
