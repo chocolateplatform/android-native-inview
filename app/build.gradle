@@ -56,7 +56,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile('com.vdopia.ads.lw:coresdk:2.5.1.1') {
+    compile('com.vdopia.ads.lw:coresdk:2.5.1.2') {
         //exclude group: 'com.facebook.android', module: 'audience-network-sdk'
         //exclude group: 'com.google.android.exoplayer', module: 'exoplayer'
         //exclude group: 'com.devbrackets.android', module: 'exomedia'
@@ -64,7 +64,7 @@ dependencies {
     }
 
     compile('com.vdopia.ads.lw:google-adapter:2.5.1.1') {
-        //exclude group: 'com.vdopia.ads.lw', module: 'coresdk'
+        exclude group: 'com.vdopia.ads.lw', module: 'coresdk'
         //exclude group: 'com.google.android.gms', module: 'play-services-ads'
         //exclude group: 'com.google.ads.interactivemedia.v3', module: 'interactivemedia'
         //exclude group: 'com.google.android.gms', module: 'play-services-ads'

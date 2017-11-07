@@ -40,6 +40,52 @@ public class PrerollActivity extends AppCompatActivity {
         requestPreroll();
     }
 
+    private PrerollAdListener singlePrerollAdListener = new PrerollAdListener() {
+        @Override
+        public void onPrerollAdLoaded(View prerollAd) {
+            Log.v(TAG, "onPrerollAdLoaded..." + prerollAd);
+            showPrerollAd();
+        }
+
+        @Override
+        public void onPrerollAdFailed(View prerollAd, LVDOConstants.LVDOErrorCode errorCode) {
+            Log.v(TAG, "onPrerollAdFailed..." + errorCode.toString() + " Just play video " + "content");
+            showPrerollAd();
+        }
+
+        @Override
+        public void onPrerollAdShown(View prerollAd) {
+            Log.v(TAG, "onPrerollAdShown...");
+        }
+
+        @Override
+        public void onPrerollAdClicked(View prerollAd) {
+            Log.v(TAG, "onPrerollAdClicked...");
+        }
+
+        @Override
+        public void onPrerollAdCompleted(View prerollAd) {
+            Log.v(TAG, "onPrerollAdCompleted...");
+        }
+
+        @Override
+        public void onPrepareMainContent(MediaPlayer player) {
+            Log.v(TAG, "onPrepareMainContent...");
+        }
+
+        @Override
+        public void onErrorMainContent(MediaPlayer player, int code) {
+            Log.v(TAG, "onErrorMainContent...");
+            setContentVisibility();
+        }
+
+        @Override
+        public void onCompleteMainContent(MediaPlayer player) {
+            Log.v(TAG, "onCompleteMainContent...");
+            setContentVisibility();
+        }
+    };
+
     private PreRollVideoAd preRollVideoAd;
 
     private void requestPreroll() {
@@ -49,49 +95,7 @@ public class PrerollActivity extends AppCompatActivity {
         preRollVideoAd.setAdRequest(getAdRequest());
         preRollVideoAd.setMediaController(new MediaController(this));
 
-        preRollVideoAd.setPrerollAdListener(new PrerollAdListener() {
-            @Override
-            public void onPrerollAdLoaded(View prerollAd) {
-                Log.v(TAG, "onPrerollAdLoaded..." + prerollAd);
-                showPrerollAd();
-            }
-
-            @Override
-            public void onPrerollAdFailed(View prerollAd, LVDOConstants.LVDOErrorCode errorCode) {
-                Log.v(TAG, "onPrerollAdFailed..." + errorCode.toString() + " Just play video " + "content");
-                showPrerollAd();
-            }
-
-            @Override
-            public void onPrerollAdShown(View prerollAd) {
-                Log.v(TAG, "onPrerollAdShown...");
-            }
-
-            @Override
-            public void onPrerollAdClicked(View prerollAd) {
-                Log.v(TAG, "onPrerollAdClicked...");
-            }
-
-            @Override
-            public void onPrerollAdCompleted(View prerollAd) {
-                Log.v(TAG, "onPrerollAdCompleted...");
-            }
-
-            @Override
-            public void onPrepareMainContent(MediaPlayer player) {
-                Log.v(TAG, "onPrepareMainContent...");
-            }
-
-            @Override
-            public void onErrorMainContent(MediaPlayer player, int code) {
-                Log.v(TAG, "onErrorMainContent...");
-            }
-
-            @Override
-            public void onCompleteMainContent(MediaPlayer player) {
-                Log.v(TAG, "onCompleteMainContent...");
-            }
-        });
+        preRollVideoAd.setPrerollAdListener(singlePrerollAdListener);
 
         if (preRollVideoAd.isReady()) {
             Log.d(TAG, "requestPreroll() play ad from cache");
@@ -142,49 +146,7 @@ public class PrerollActivity extends AppCompatActivity {
         String contentVideo = "http://cdn.vdopia.com/files/happy.mp4";
         preRollVideoAd.setVideoPath(contentVideo);
         preRollVideoAd.setAdRequest(adRequest);
-        preRollVideoAd.setPrerollAdListener(new PrerollAdListener() {
-            @Override
-            public void onPrerollAdLoaded(View prerollAd) {
-                Log.d(TAG, "PreRoll Video Ad onPrerollAdLoaded (DON'T CARE; ALREADY HAVE THE AD " + "TO SHOW)");
-            }
-
-            @Override
-            public void onPrerollAdFailed(View prerollAd, LVDOConstants.LVDOErrorCode errorCode) {
-                Log.d(TAG, "PreRoll Video Ad onPrerollAdFailed: " + errorCode);
-            }
-
-            @Override
-            public void onPrerollAdShown(View prerollAd) {
-                Log.d(TAG, "PreRoll Video Ad onPrerollAdShown");
-            }
-
-            @Override
-            public void onPrerollAdClicked(View prerollAd) {
-                Log.d(TAG, "PreRoll Video Ad onPrerollAdClicked");
-            }
-
-            @Override
-            public void onPrerollAdCompleted(View prerollAd) {
-                Log.d(TAG, "PreRoll Video Ad onPrerollAdCompleted");
-            }
-
-            @Override
-            public void onPrepareMainContent(MediaPlayer player) {
-                Log.d(TAG, "PreRoll Video onPrepareMainContent");
-            }
-
-            @Override
-            public void onErrorMainContent(MediaPlayer player, int code) {
-                Log.d(TAG, "PreRoll Video onErrorMainContent : " + code);
-                setContentVisibility();
-            }
-
-            @Override
-            public void onCompleteMainContent(MediaPlayer player) {
-                Log.d(TAG, "PreRoll Video onCompleteMainContent");
-                setContentVisibility();
-            }
-        });
+        preRollVideoAd.setPrerollAdListener(singlePrerollAdListener);
 
         ViewGroup parent = (ViewGroup) preRollVideoAd.getParent();
         if (parent != null) {
