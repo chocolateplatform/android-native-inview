@@ -13,6 +13,10 @@ repositories {
     maven { url "https://adcolony.bintray.com/AdColony" }
     maven { url "https://dl.bintray.com/vdopiacorp/sdk" }
     google()
+    // If you're using a version of Gradle lower than 4.1, you must instead use:
+    // maven {
+    //     url 'https://maven.google.com'
+    // }
 }
 
 android {
@@ -57,7 +61,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.vdopia.ads.lw:coresdk:2.5.2.0'
+    //compile 'com.vdopia.ads.lw:coresdk:2.5.2.0'
     compile 'com.vdopia.ads.lw:adcolony-adapter:1.0.0'
     compile 'com.vdopia.ads.lw:applovin-adapter:1.0.0'
     compile 'com.vdopia.ads.lw:chartboost-adapter:1.0.0'
@@ -67,12 +71,12 @@ dependencies {
         //of play-services-ads library.  Otherwise, google-adapter will use 11.6.0
         //exclude group: 'com.google.android.gms', module: 'play-services-ads'
     }
-    compile('com.vdopia.ads.lw:inmobi-adapter:1.0.0')
-    compile('com.vdopia.ads.lw:mopub-adapter:1.0.0')
-    compile('com.vdopia.ads.lw:tapjoy-adapter:1.0.0')
-    compile('com.vdopia.ads.lw:unity-adapter:1.0.0')
-    compile('com.vdopia.ads.lw:vungle-adapter:1.0.0')
-    compile('com.vdopia.ads.lw:yahoo-adapter:1.0.0')
+    compile 'com.vdopia.ads.lw:inmobi-adapter:1.0.0'
+    compile 'com.vdopia.ads.lw:mopub-adapter:1.0.1'
+    compile 'com.vdopia.ads.lw:tapjoy-adapter:1.0.0'
+    compile 'com.vdopia.ads.lw:unity-adapter:1.0.0'
+    compile 'com.vdopia.ads.lw:vungle-adapter:1.0.0'
+    compile 'com.vdopia.ads.lw:yahoo-adapter:1.0.0'
 
     //Use your own desired version of play-services-ads
     //compile 'com.google.android.gms:play-services-ads:11.4.2'
