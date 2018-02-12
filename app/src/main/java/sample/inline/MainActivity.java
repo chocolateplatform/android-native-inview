@@ -26,7 +26,7 @@ import sample.inline.model.Item;
 
 public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
 
-    public static final String TAG = "KevinActivity";
+    public static final String TAG = "MainActivity";
 
     private ActivityMainBinding binding;
     private Adapter adapter;

@@ -85,9 +85,7 @@ public class BaseActivity extends AppCompatActivity {
     private PreRollVideoAd preRollVideoAd;
 
     private void requestPreroll() {
-        LVDOAdSize adSize = new LVDOAdSize(300, 250);
-
-        preRollVideoAd = PreRollVideoAd.getInstance(this);
+        preRollVideoAd = new PreRollVideoAd(this);
         preRollVideoAd.setMediaController(new MediaController(this));
 
         preRollVideoAd.setPrerollAdListener(new PrerollAdListener() {
@@ -132,7 +130,7 @@ public class BaseActivity extends AppCompatActivity {
             }
         });
 
-        preRollVideoAd.loadAd(getAdRequest(), Config.APP_ID, adSize, this, true);
+        preRollVideoAd.loadAd(BaseActivity.this, getAdRequest(), Config.APP_ID, LVDOAdSize.IAB_MRECT, true);
     }
 
     private LVDOAdRequest getAdRequest() {
@@ -151,7 +149,7 @@ public class BaseActivity extends AppCompatActivity {
         adRequest.setEthnicity("Asian");
         adRequest.setPostalCode("110096");
         adRequest.setCurrPostal("201301");
-        adRequest.setMaritalStatus(LVDOAdRequest.LVDOMartialStatus.Single);
+        adRequest.setMaritalStatus(LVDOAdRequest.LVDOMartialStatus.SINGLE);
         //        adRequest.setBirthday(Utils.getDate());
         adRequest.setGender(LVDOAdRequest.LVDOGender.MALE);
 
