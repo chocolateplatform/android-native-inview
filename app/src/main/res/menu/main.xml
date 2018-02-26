@@ -7,10 +7,4 @@
         android:orderInCategory="100"
         android:title="@string/preroll_activity"
         app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/preroll_fragment"
-        android:orderInCategory="100"
-        android:title="@string/preroll_fragment"
-        app:showAsAction="never"/>
 </menu>

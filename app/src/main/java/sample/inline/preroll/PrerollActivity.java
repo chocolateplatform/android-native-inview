@@ -18,13 +18,11 @@ import com.vdopia.ads.lw.LVDOConstants;
 import com.vdopia.ads.lw.PreRollVideoAd;
 import com.vdopia.ads.lw.PrerollAdListener;
 
-import java.util.ArrayList;
-
 import sample.inline.Config;
 import sample.inline.R;
 import sample.inline.databinding.LayoutPrerollBinding;
 
-public class PrerollActivity extends AppCompatActivity {
+public class PrerollActivity extends AppCompatActivity implements PrerollAdListener {
 
     public static final String TAG = "PrerollActivity";
 
@@ -41,73 +39,17 @@ public class PrerollActivity extends AppCompatActivity {
         requestPreroll();
     }
 
-    private PrerollAdListener singlePrerollAdListener = new PrerollAdListener() {
-        @Override
-        public void onPrerollAdLoaded(View prerollAd) {
-            Log.v(TAG, "onPrerollAdLoaded..." + prerollAd + " prerollAd.isReady(): " + "" + preRollVideoAd.isReady());
-            /**
-             * Preroll is now ready to be played.
-             */
-            showPrerollAd();
-        }
-
-        @Override
-        public void onPrerollAdFailed(View prerollAd, LVDOConstants.LVDOErrorCode errorCode) {
-            Log.v(TAG, "onPrerollAdFailed..." + errorCode.toString() + " Just play video " + "content");
-            /**
-             * If a preroll ad was requested, but failed (due to no inventory), then showPrerollAd()
-             * will result in the main content to be played.
-             */
-            showPrerollAd();
-        }
-
-        @Override
-        public void onPrerollAdShown(View prerollAd) {
-            Log.v(TAG, "onPrerollAdShown...");
-        }
-
-        @Override
-        public void onPrerollAdClicked(View prerollAd) {
-            Log.v(TAG, "onPrerollAdClicked...");
-        }
-
-        @Override
-        public void onPrerollAdCompleted(View prerollAd) {
-            Log.v(TAG, "onPrerollAdCompleted...");
-        }
-
-        @Override
-        public void onPrepareMainContent(MediaPlayer player) {
-            Log.v(TAG, "onPrepareMainContent...");
-        }
-
-        @Override
-        public void onErrorMainContent(MediaPlayer player, int code) {
-            Log.v(TAG, "onErrorMainContent...");
-            setContentVisibility();
-        }
-
-        @Override
-        public void onCompleteMainContent(MediaPlayer player) {
-            Log.v(TAG, "onCompleteMainContent...");
-            setContentVisibility();
-        }
-    };
-
     private void requestPreroll() {
 
         preRollVideoAd = new PreRollVideoAd(this);
-        preRollVideoAd.setAdRequest(getAdRequest());
         preRollVideoAd.setMediaController(new MediaController(this));
-
-        preRollVideoAd.setPrerollAdListener(singlePrerollAdListener);
 
         if (preRollVideoAd.isReady()) {
             Log.d(TAG, "requestPreroll() play ad from cache");
             showPrerollAd();
         } else {
             Log.d(TAG, "requestPreroll() request new ads");
-            preRollVideoAd.loadAd(this, getAdRequest(), Config.APP_ID, LVDOAdSize.IAB_MRECT, isMainContentFullscreen);
+            preRollVideoAd.loadAd(getAdRequest(), Config.APP_ID, LVDOAdSize.IAB_MRECT, PrerollActivity.this, isMainContentFullscreen);
         }
     }
 
@@ -144,12 +86,8 @@ public class PrerollActivity extends AppCompatActivity {
 
     private void showPrerollAd() {
         LVDOAdRequest adRequest = getAdRequest();
-        preRollVideoAd.setAdContext(this);
-
         String contentVideo = "http://cdn.vdopia.com/files/happy.mp4";
         preRollVideoAd.setVideoPath(contentVideo);
-        preRollVideoAd.setAdRequest(adRequest);
-        preRollVideoAd.setPrerollAdListener(singlePrerollAdListener);
 
         ViewGroup parent = (ViewGroup) preRollVideoAd.getParent();
         if (parent != null) {
@@ -183,6 +121,57 @@ public class PrerollActivity extends AppCompatActivity {
 
             ((AppCompatActivity) this).getSupportActionBar().show();
         }
+    }
+
+    @Override
+    public void onPrerollAdLoaded(View prerollAd) {
+        Log.v(TAG, "onPrerollAdLoaded..." + prerollAd + " prerollAd.isReady(): " + "" + preRollVideoAd.isReady());
+        /**
+         * Preroll is now ready to be played.
+         */
+        showPrerollAd();
+    }
+
+    @Override
+    public void onPrerollAdFailed(View prerollAd, LVDOConstants.LVDOErrorCode errorCode) {
+        Log.v(TAG, "onPrerollAdFailed..." + errorCode.toString() + " Just play video " + "content");
+        /**
+         * If a preroll ad was requested, but failed (due to no inventory), then showPrerollAd()
+         * will result in the main content to be played.
+         */
+        showPrerollAd();
+    }
+
+    @Override
+    public void onPrerollAdShown(View prerollAd) {
+        Log.v(TAG, "onPrerollAdShown...");
+    }
+
+    @Override
+    public void onPrerollAdClicked(View prerollAd) {
+        Log.v(TAG, "onPrerollAdClicked...");
+    }
+
+    @Override
+    public void onPrerollAdCompleted(View prerollAd) {
+        Log.v(TAG, "onPrerollAdCompleted...");
+    }
+
+    @Override
+    public void onPrepareMainContent(MediaPlayer player) {
+        Log.v(TAG, "onPrepareMainContent...");
+    }
+
+    @Override
+    public void onErrorMainContent(MediaPlayer player, int code) {
+        Log.v(TAG, "onErrorMainContent...");
+        setContentVisibility();
+    }
+
+    @Override
+    public void onCompleteMainContent(MediaPlayer player) {
+        Log.v(TAG, "onCompleteMainContent...");
+        setContentVisibility();
     }
 
 }
