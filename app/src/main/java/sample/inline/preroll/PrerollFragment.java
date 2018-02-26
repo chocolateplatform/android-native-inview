@@ -32,6 +32,8 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
 
     public static final String TAG = "PrerollFragment";
 
+    private PreRollVideoAd preRollVideoAd;
+
     public static Fragment newInstance() {
         Bundle args = new Bundle();
         PrerollFragment fragment = new PrerollFragment();
@@ -40,7 +42,6 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
     }
 
     private LayoutPrerollBinding binding;
-    private int prerollAdCount;
     private boolean isMainContentFullscreen = true;
     private Handler handler = new Handler(Looper.getMainLooper());
 
@@ -59,28 +60,20 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                showPrerollAd();
+                requestPreroll();
             }
         });
     }
 
-    private PreRollVideoAd preRollVideoAd;
-
     private void requestPreroll() {
-        LVDOAdSize adSize = new LVDOAdSize(300, 250);
-
-        preRollVideoAd = PreRollVideoAd.getInstance(getActivity());
+        preRollVideoAd = new PreRollVideoAd(getActivity());
         preRollVideoAd.setMediaController(new MediaController(getActivity()));
 
         preRollVideoAd.setPrerollAdListener(new PrerollAdListener() {
             @Override
             public void onPrerollAdLoaded(View prerollAd) {
                 Log.v(TAG, "onPrerollAdLoaded..." + prerollAd);
-                synchronized (this) {
-                    prerollAdCount++;
-                }
-                if (prerollAdCount == 3)
-                    showPrerollAd();
+                showPrerollAd();
             }
 
             @Override
@@ -119,7 +112,7 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
             }
         });
 
-        preRollVideoAd.loadAd(getAdRequest(), Config.APP_ID, adSize, getActivity(), isMainContentFullscreen);
+        preRollVideoAd.loadAd(getActivity(), getAdRequest(), Config.APP_ID, LVDOAdSize.IAB_MRECT, isMainContentFullscreen);
     }
 
     private LVDOAdRequest getAdRequest() {
@@ -138,7 +131,7 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
         adRequest.setEthnicity("Asian");
         adRequest.setPostalCode("110096");
         adRequest.setCurrPostal("201301");
-        adRequest.setMaritalStatus(LVDOAdRequest.LVDOMartialStatus.Single);
+        adRequest.setMaritalStatus(LVDOAdRequest.LVDOMartialStatus.SINGLE);
         //        adRequest.setBirthday(Utils.getDate());
         adRequest.setGender(LVDOAdRequest.LVDOGender.MALE);
 
@@ -156,12 +149,6 @@ public class PrerollFragment extends Fragment implements PrerollAdListener {
     private void showPrerollAd() {
         LVDOAdRequest adRequest = getAdRequest();
 
-        ArrayList<LVDOConstants.PARTNERS> mPartnerNames = new ArrayList<>();
-        LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.ALL;
-        mPartnerNames.add(partner);
-        adRequest.setPartnerNames(mPartnerNames);
-
-        preRollVideoAd = PreRollVideoAd.getInstance(getActivity());
         preRollVideoAd.setAdContext(getActivity());
 
         String contentVideo = "http://cdn.vdopia.com/files/happy.mp4";

@@ -30,6 +30,7 @@ public class PrerollActivity extends AppCompatActivity {
 
     private LayoutPrerollBinding binding;
     private boolean isMainContentFullscreen = true;
+    private PreRollVideoAd preRollVideoAd;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class PrerollActivity extends AppCompatActivity {
     private PrerollAdListener singlePrerollAdListener = new PrerollAdListener() {
         @Override
         public void onPrerollAdLoaded(View prerollAd) {
-            Log.v(TAG, "onPrerollAdLoaded..." + prerollAd + " prerollAd.isReady(): " + "" + preRollVideoAd.isReady() + " preroll cache count: " + preRollVideoAd.getNumReadyAdsFromCache());
+            Log.v(TAG, "onPrerollAdLoaded..." + prerollAd + " prerollAd.isReady(): " + "" + preRollVideoAd.isReady());
             /**
              * Preroll is now ready to be played.
              */
@@ -93,12 +94,9 @@ public class PrerollActivity extends AppCompatActivity {
         }
     };
 
-    private PreRollVideoAd preRollVideoAd;
-
     private void requestPreroll() {
-        LVDOAdSize adSize = new LVDOAdSize(300, 250);
 
-        preRollVideoAd = PreRollVideoAd.getInstance(this);
+        preRollVideoAd = new PreRollVideoAd(this);
         preRollVideoAd.setAdRequest(getAdRequest());
         preRollVideoAd.setMediaController(new MediaController(this));
 
@@ -109,17 +107,17 @@ public class PrerollActivity extends AppCompatActivity {
             showPrerollAd();
         } else {
             Log.d(TAG, "requestPreroll() request new ads");
-            preRollVideoAd.loadAd(getAdRequest(), Config.APP_ID, adSize, this, isMainContentFullscreen);
+            preRollVideoAd.loadAd(this, getAdRequest(), Config.APP_ID, LVDOAdSize.IAB_MRECT, isMainContentFullscreen);
         }
     }
 
     private LVDOAdRequest getAdRequest() {
         LVDOAdRequest adRequest = new LVDOAdRequest(this);
 
-        ArrayList<LVDOConstants.PARTNERS> partnerNames = new ArrayList<>();
-        LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.ALL;
-        partnerNames.add(partner);
-        adRequest.setPartnerNames(partnerNames);
+        //ArrayList<LVDOConstants.PARTNERS> partnerNames = new ArrayList<>();
+        //LVDOConstants.PARTNERS partner = LVDOConstants.PARTNERS.ALL;
+        //partnerNames.add(partner);
+        //adRequest.setPartnerNames(partnerNames);
 
         //        LocationData locationData = new LocationData(AdListActivity.this);
         //        adRequest.setLocation(locationData.getDeviceLocation());
@@ -129,7 +127,7 @@ public class PrerollActivity extends AppCompatActivity {
         adRequest.setEthnicity("Asian");
         adRequest.setPostalCode("110096");
         adRequest.setCurrPostal("201301");
-        adRequest.setMaritalStatus(LVDOAdRequest.LVDOMartialStatus.Single);
+        adRequest.setMaritalStatus(LVDOAdRequest.LVDOMartialStatus.SINGLE);
         //        adRequest.setBirthday(Utils.getDate());
         adRequest.setGender(LVDOAdRequest.LVDOGender.MALE);
 
@@ -146,8 +144,6 @@ public class PrerollActivity extends AppCompatActivity {
 
     private void showPrerollAd() {
         LVDOAdRequest adRequest = getAdRequest();
-
-        preRollVideoAd = PreRollVideoAd.getInstance(this);
         preRollVideoAd.setAdContext(this);
 
         String contentVideo = "http://cdn.vdopia.com/files/happy.mp4";
