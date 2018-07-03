@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
+import com.vdopia.ads.lw.Chocolate;
+import com.vdopia.ads.lw.InitCallback;
 import com.vdopia.ads.lw.LVDOAdRequest;
 import com.vdopia.ads.lw.LVDOAdSize;
 import com.vdopia.ads.lw.LVDOBannerAd;
@@ -31,39 +33,35 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
     private ActivityMainBinding binding;
     private Adapter adapter;
     private LinearLayoutManager lm;
-    private LVDOBannerAd adview;
+    private LVDOBannerAd bannerAd;
     private boolean isAdRequestInProgress;
     private int scrollDy;
+    private LVDOAdRequest adRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        adRequest = new LVDOAdRequest(this);
+        if (Chocolate.isInitialized(this)) {
+            loadData();
+        } else {
+            Chocolate.init(this, Config.APP_ID, new InitCallback() {
+                @Override
+                public void onSuccess() {
+                    loadData();
+                }
+
+                @Override
+                public void onError(String s) {
+
+                }
+            });
+        }
+
         adapter = new Adapter(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.recyclerView.setLayoutManager((lm = new LinearLayoutManager(this)));
         binding.recyclerView.setAdapter(adapter);
-
-        new AsyncTask<Void, Void, List<Item>>() {
-            @Override
-            protected void onPostExecute(List<Item> items) {
-                ArrayList<Adapter.ItemWrapper> list = new ArrayList<>(items.size());
-                for (Item item : items) {
-                    list.add(new Adapter.ItemWrapper(item));
-                }
-                adapter.setItemWrappers(list);
-                requestAd();
-            }
-
-            @Override
-            protected List<Item> doInBackground(Void... voids) {
-                try {
-                    return Arrays.asList(new Gson().fromJson(new InputStreamReader(MainActivity.this.getAssets().open("media_list.json")), Item[].class));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        }.execute();
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -93,6 +91,30 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
         });
     }
 
+    private void loadData() {
+        new AsyncTask<Void, Void, List<Item>>() {
+            @Override
+            protected void onPostExecute(List<Item> items) {
+                ArrayList<Adapter.ItemWrapper> list = new ArrayList<>(items.size());
+                for (Item item : items) {
+                    list.add(new Adapter.ItemWrapper(item));
+                }
+                adapter.setItemWrappers(list);
+                requestAd();
+            }
+
+            @Override
+            protected List<Item> doInBackground(Void... voids) {
+                try {
+                    return Arrays.asList(new Gson().fromJson(new InputStreamReader(MainActivity.this.getAssets().open("media_list.json")), Item[].class));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }.execute();
+    }
+
     private void requestAd() {
         if (isAdRequestInProgress) {
             Log.d(TAG, "requestAd (don't do; already in progress)");
@@ -101,9 +123,9 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
             Log.d(TAG, "requestAd");
             isAdRequestInProgress = true;
         }
-        adview = new LVDOBannerAd(this, LVDOAdSize.INVIEW_LEADERBOARD, Config.APP_ID, this);
-        LVDOAdRequest adRequest = new LVDOAdRequest(this);
-        adview.loadAd(adRequest);
+        if (bannerAd == null)
+            bannerAd = new LVDOBannerAd(this, LVDOAdSize.INVIEW_LEADERBOARD, Config.APP_ID, this);
+        bannerAd.loadAd(adRequest);
     }
 
     @Override
@@ -120,8 +142,9 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
                 }
             }
             vis = vis < Config.TRIGGER_DISTANCE ? Config.TRIGGER_DISTANCE : vis;
-            adapter.insertAd(vis, banner, adview);
+            adapter.insertAd(vis, banner, bannerAd);
         }
+        LVDOBannerAd.prefetch(this, LVDOAdSize.INVIEW_LEADERBOARD, Config.APP_ID, adRequest);
     }
 
     @Override
