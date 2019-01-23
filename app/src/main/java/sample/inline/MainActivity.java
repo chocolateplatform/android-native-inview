@@ -17,20 +17,20 @@ import com.vdopia.ads.lw.LVDOBannerAd;
 import com.vdopia.ads.lw.LVDOBannerAdListener;
 import com.vdopia.ads.lw.LVDOConstants;
 
+import net.atlassianvdopia.R;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import sample.inline.databinding.ActivityMainBinding;
 import sample.inline.model.Item;
 
 public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
 
     public static final String TAG = "MainActivity";
 
-    private ActivityMainBinding binding;
     private Adapter adapter;
     private LinearLayoutManager lm;
     private LVDOBannerAd bannerAd;
@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adRequest = new LVDOAdRequest(this);
-        if (Chocolate.isInitialized(this)) {
+        if (Chocolate.isInitialized()) {
             loadData();
         } else {
             Chocolate.init(this, Config.APP_ID, new InitCallback() {
@@ -59,10 +59,11 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
         }
 
         adapter = new Adapter(this);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.recyclerView.setLayoutManager((lm = new LinearLayoutManager(this)));
-        binding.recyclerView.setAdapter(adapter);
-        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        DataBindingUtil.setContentView(this, R.layout.activity_main);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager((lm = new LinearLayoutManager(this)));
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {

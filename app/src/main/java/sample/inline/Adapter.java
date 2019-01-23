@@ -10,22 +10,21 @@ import android.view.ViewGroup;
 
 import com.vdopia.ads.lw.LVDOBannerAd;
 
+import net.atlassianvdopia.R;
+import net.atlassianvdopia.databinding.AdItemBinding;
+import net.atlassianvdopia.databinding.ItemBinding;
+
 import java.util.ArrayList;
 
-import sample.inline.databinding.AdItemBinding;
-import sample.inline.databinding.ItemBinding;
 import sample.inline.model.Item;
-import sample.inline.utils.ScreenUtil;
 
 public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
    private static final String TAG = "KevinAdapter";
    private static final int TYPE_NORMAL = 0;
    private static final int TYPE_ADS = 1;
-   private static int SCREEN_HEIGHT;
 
    public Adapter(Context context) {
-      SCREEN_HEIGHT = ScreenUtil.getScreenHeight(context);
    }
 
    private ArrayList<ItemWrapper> itemWrappers = new ArrayList<>();
@@ -36,6 +35,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
    }
 
    public void insertAd(int position, View adView, LVDOBannerAd bannerAd) {
+      Log.d(TAG, "insertAd");
       removeAd();
       ItemWrapper itemWrapper = new ItemWrapper(adView, bannerAd);
       itemWrappers.add(position, itemWrapper);
@@ -48,7 +48,6 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          ItemWrapper removed = itemWrappers.remove(adPos);
          notifyItemRemoved(adPos);
          removed.bannerAd.destroyView();
-         Log.d(TAG, "ad removed");
       }
    }
 
@@ -93,7 +92,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
       if (itemWrapper.type == TYPE_NORMAL) {
          ItemHolder itemHolder = (ItemHolder) holder;
          itemHolder.binding.setItem(itemWrapper.item);
-         itemHolder.binding.image.getLayoutParams().height = (int) (SCREEN_HEIGHT * 0.60f);
+         //itemHolder.binding.image.getLayoutParams().height = (int) (SCREEN_HEIGHT * Config.CARD_HEIGHT_PERCENTAGE_OF_SCREEN);
 
       } else {
          AdHolder adHolder = (AdHolder) holder;

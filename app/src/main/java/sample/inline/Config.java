@@ -23,5 +23,5 @@ public final class Config {
      * ad position, unless the user was to completely pause scrolling for several seconds
      * after each row scroll.
      */
-    public static final int TRIGGER_DISTANCE = 3;
+    public static final int TRIGGER_DISTANCE = 2;
 }
