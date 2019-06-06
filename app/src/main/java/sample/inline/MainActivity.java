@@ -16,7 +16,6 @@ import com.vdopia.ads.lw.LVDOAdSize;
 import com.vdopia.ads.lw.LVDOBannerAd;
 import com.vdopia.ads.lw.LVDOBannerAdListener;
 import com.vdopia.ads.lw.LVDOConstants;
-import com.vdopia.ads.lw.VdopiaLogger;
 
 import net.atlassianvdopia.R;
 
@@ -43,8 +42,8 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adRequest = new LVDOAdRequest(this);
-        Chocolate.enableChocolateTestAds(true);
-        VdopiaLogger.enable(true);
+        //Chocolate.enableChocolateTestAds(true);
+        //VdopiaLogger.enable(true);
         if (Chocolate.isInitialized()) {
             loadData();
         } else {
