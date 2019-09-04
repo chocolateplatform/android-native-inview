@@ -3,21 +3,20 @@ package sample.inline;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.chocolateplatform.sample.inview.R;
 import com.google.gson.Gson;
 import com.vdopia.ads.lw.Chocolate;
 import com.vdopia.ads.lw.InitCallback;
 import com.vdopia.ads.lw.LVDOAdRequest;
-import com.vdopia.ads.lw.LVDOAdSize;
 import com.vdopia.ads.lw.LVDOBannerAd;
 import com.vdopia.ads.lw.LVDOBannerAdListener;
 import com.vdopia.ads.lw.LVDOConstants;
-
-import net.atlassianvdopia.R;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +26,7 @@ import java.util.List;
 
 import sample.inline.model.Item;
 
-public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
+public class MainActivity extends AppCompatActivity implements LVDOBannerAdListener {
 
     public static final String TAG = "MainActivity";
 
@@ -42,12 +41,11 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adRequest = new LVDOAdRequest(this);
-        //Chocolate.enableChocolateTestAds(true);
-        //VdopiaLogger.enable(true);
+        Chocolate.enableChocolateTestAds(true);
+        Chocolate.enableLogging(true);
         if (Chocolate.isInitialized()) {
             loadData();
         } else {
-            LVDOAdRequest adRequest = new LVDOAdRequest(this);
             Chocolate.init(this, Config.APP_ID, adRequest, new InitCallback() {
                 @Override
                 public void onSuccess() {
@@ -127,8 +125,7 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
             Log.d(TAG, "requestAd");
             isAdRequestInProgress = true;
         }
-        if (bannerAd == null)
-            bannerAd = new LVDOBannerAd(this, LVDOAdSize.INVIEW_LEADERBOARD, Config.APP_ID, this);
+        bannerAd = new LVDOBannerAd(this, this);
         bannerAd.loadAd(adRequest);
     }
 
@@ -142,10 +139,12 @@ public class MainActivity extends BaseActivity implements LVDOBannerAdListener {
             int adPos = adapter.getAdPosition();
             if (adPos != -1) {
                 if (Math.abs(vis - adPos) < Config.TRIGGER_DISTANCE) {
+                    Log.d(TAG, "onBannerAdLoaded but there's already an ad nearby.  dont ad to list");
                     return;//there's already an ad nearby in the list
                 }
             }
             vis = vis < Config.TRIGGER_DISTANCE ? Config.TRIGGER_DISTANCE : vis;
+            Log.d(TAG, "onBannerAdLoaded and inserted");
             adapter.insertAd(vis, banner, bannerAd);
         }
     }
