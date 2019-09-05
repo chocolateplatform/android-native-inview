@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ListAds</string>
+    <string name="app_name">Chocolate Native Inview</string>
     <string name="preroll_fragment">Preroll Fragment</string>
     <string name="preroll_activity">Preroll Activity</string>
     <string name="hello">Hello Everybody!</string>

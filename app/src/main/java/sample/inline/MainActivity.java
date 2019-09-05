@@ -1,12 +1,17 @@
 package sample.inline;
 
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.chocolateplatform.sample.inview.R;
@@ -163,13 +168,45 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
     @Override
     public void onBannerAdClosed(View view) {
         Log.d(TAG, "onBannerAdClosed");
-        adapter.removeAd();
+        adapter.cleanUp();
         isAdRequestInProgress = false;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        adapter.removeAd();
+        adapter.cleanUp();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_choose_partners:
+                choosePartners();
+                return true;
+            case R.id.menu_show_current_winner:
+                if (bannerAd != null) {
+                    new AlertDialog.Builder(this).setMessage("Current Winning Partner: " + bannerAd.getWinningPartnerName()).show();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void choosePartners() {
+        ChocolatePartners.choosePartners(ChocolatePartners.ADTYPE_INVIEW, this, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ChocolatePartners.setInviewPartners(adRequest);
+            }
+        });
     }
 }

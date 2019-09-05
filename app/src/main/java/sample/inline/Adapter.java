@@ -35,13 +35,13 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void insertAd(int position, View adView, LVDOBannerAd bannerAd) {
         Log.d(TAG, "insertAd");
-        removeAd();
+        cleanUp();
         ItemWrapper itemWrapper = new ItemWrapper(adView, bannerAd);
         itemWrappers.add(position, itemWrapper);
         notifyItemInserted(position);
     }
 
-    public void removeAd() {
+    public void cleanUp() {
         int adPos = getAdPosition();
         if (adPos != -1) {
             ItemWrapper removed = itemWrappers.remove(adPos);
