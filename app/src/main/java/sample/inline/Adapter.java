@@ -21,7 +21,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "KevinAdapter";
     private static final int TYPE_NORMAL = 0;
-    private static final int TYPE_ADS = 1;
+    private static final int TYPE_AD = 1;
 
     public Adapter(Context context) {
     }
@@ -53,7 +53,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getAdPosition() {
         for (int i = 0; i < itemWrappers.size(); i++) {
             ItemWrapper itemWrapper = itemWrappers.get(i);
-            if (itemWrapper.type == TYPE_ADS) {
+            if (itemWrapper.type == TYPE_AD) {
                 return i;
             }
         }
@@ -134,7 +134,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         ItemWrapper(View adView, LVDOBannerAd bannerAd) {
-            type = TYPE_ADS;
+            type = TYPE_AD;
             this.adView = adView;
             this.bannerAd = bannerAd;
         }
