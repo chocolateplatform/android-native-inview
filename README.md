@@ -1,6 +1,5 @@
-# Chocolate Ads Sample using native Inview in MREC (300 x 250)
-Intelligently display Chocolate Ads in Inview MREC (300 x 250) format.  These can be video and/or ads and static ads.  
-
-As you scroll the Recycler view, ads will be intelligently inserted and recycled as necessary.  Endless scroll.
+# Chocolate Ads Sample using Banner Ads 300 x 250
+Dynamically display Chocolate Ads in an endless Recycler View.
+Ads are inserted every 4 or 5 card scrolls.
 
 <img src="inview_ads_recyclerview.gif"/>
