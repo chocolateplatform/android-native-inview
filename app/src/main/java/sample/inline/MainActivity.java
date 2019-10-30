@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.vdopia.ads.lw.Chocolate;
 import com.vdopia.ads.lw.InitCallback;
 import com.vdopia.ads.lw.LVDOAdRequest;
+import com.vdopia.ads.lw.LVDOAdSize;
 import com.vdopia.ads.lw.LVDOBannerAd;
 import com.vdopia.ads.lw.LVDOBannerAdListener;
 import com.vdopia.ads.lw.LVDOConstants;
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements LVDOBannerAdListe
             Log.d(TAG, "requestAd");
             isAdRequestInProgress = true;
         }
-        bannerAd = new LVDOBannerAd(this, this);
+        bannerAd = new LVDOBannerAd(this, LVDOAdSize.MEDIUM_RECT_300_250, this);
         bannerAd.loadAd(adRequest);
     }
 
